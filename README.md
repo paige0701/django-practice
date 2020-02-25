@@ -34,6 +34,8 @@ manage.py 경로에서 polls 앱을 생성한다. 앱은 프로젝트안에 있�
 python manage.py startapp <name>
 ```
 
+## Write your first view < View 생성하기 >
+
 
 ## Starting a development server
 manage.py 경로에서 실행한다
