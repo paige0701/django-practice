@@ -35,6 +35,38 @@ python manage.py startapp <name>
 ```
 
 ## Write your first view < View 생성하기 >
+[http://127.0.0.1:8000/polls/] 라는 url 을 생성하려면 어떻게 해야하나? 
+
+이건 poll 앱의 Home 을 얘기한다. polls/views.py 에서 index page 를 생성한다.
+```
+from django.http import HttpResponse
+
+def index(request):
+    return HttpResponse('Hello, world. You are at the poll index')
+```
+
+
+polls/urls.py 에 url 를 추가한다.
+```
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.index, name='index')
+]
+```
+
+djangoPractice/urls.py 에서 poll 앱의 url 를 추가한다.
+```
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('polls/', include('polls.urls')),
+    path('admin/', admin.site.urls),
+]
+```
+
 
 
 ## Starting a development server
