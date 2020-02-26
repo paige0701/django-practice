@@ -67,6 +67,76 @@ urlpatterns = [
 ]
 ```
 
+## Connecting database (데이터베이스 초기 설정)
+mysql 사용시 mysqlclient 설치 필요
+```
+pip install mysqlclient
+```
+
+mysql 사용시, user 이름이 root, 비밀번호가 root 인 계정으로 mysql 을 실행 하겠다는 뜻 터미널에서 아래 명령어 실행
+``` 
+mysql -uroot -proot
+```
+
+mysql user 생성 username : django, password: django
+```
+CREATE USER 'django'@'localhost' INDENTIFIED BY 'django'; 
+```
+
+유저를 생성 직후에는 아무 권한이 없다. 권한을 줘야한다.
+```
+GRANT ALL PRIVILEGES ON * . * TO 'django'@'localhost';
+FLUSH PRIVILEGES;
+```
+
+데이터베이스 조회
+```
+show databases;
+```
+
+데이터베이스 생성
+```
+create databases <name> character set utf8;
+grant all privileges on django_practice.* TO django@localhost identified by 'django';
+grant all privileges on django_practice.* TO django@'%' identified by 'django';
+
+flush privileges;
+```
+
+Quit mysql and log back in with new user
+```
+quit
+mysql -udjango -pdjango
+```
+
+
+데이터베이스 연결 djangoPractice/settings.py
+```
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'django_practice',
+        'USER': 'django',
+        'PASSWORD': 'django',
+        'HOST':'localhost'
+    }
+}
+
+```
+
+create tables 
+```
+python manage.py migrate
+```
+
+check if tables are created
+```
+mysql -udjango -pdjango;
+show databases;
+use django_practice;
+show tables;
+```
+
 
 
 ## Starting a development server
