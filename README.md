@@ -96,7 +96,7 @@ show databases;
 
 데이터베이스 생성
 ```
-create databases <name> character set utf8;
+create database <name> character set utf8;
 grant all privileges on django_practice.* TO django@localhost identified by 'django';
 grant all privileges on django_practice.* TO django@'%' identified by 'django';
 
@@ -137,7 +137,22 @@ use django_practice;
 show tables;
 ```
 
+create Models yourself (직접 테이블 생성하기) polls/models.py 참고
 
+polls 앱을 사용할것이라고 djangoPractice/settings.py 에 선언해야 한다.
+
+
+models.py 에 변경된 부분을 miragtion 으로 보관(?) 하겠다는 것이다. 
+migration 정보는 polls/migrations 아래 저장되며 git에 올려서 협업하는데 사용한다(?)
+데이터베이스 변경 히스토리 조작/추적 가능해서 이렇게 makemigrations/migrate 명령을 따로 두는것 같음 
+```
+python manage.py makemigrations
+```
+
+migrate 를 해야 변경된 부분이 데이터베이스에 반영된다.
+```
+python manage.py migrate
+```
 
 ## Starting a development server
 manage.py 경로에서 실행한다
