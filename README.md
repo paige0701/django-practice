@@ -1,6 +1,21 @@
 # Starting django project
 
 
+<h3 style="color:'red'">Starting a development server</h3>
+manage.py 경로에서 실행한다
+
+```
+python manage.py runserver
+```
+
+<h3 style="color:'red'">Urls</h3>
+
+admin
+```
+/admin
+```
+
+
 ## Creating a project < 프로젝트 생성 >
 
 먼저 프로젝트를 만들 폴더를 생성한다
@@ -154,9 +169,7 @@ migrate 를 해야 변경된 부분이 데이터베이스에 반영된다.
 python manage.py migrate
 ```
 
-## Starting a development server
-manage.py 경로에서 실행한다
-```
-python manage.py runserver
-```
+
+
+
 
