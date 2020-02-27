@@ -15,6 +15,30 @@ admin
 /admin
 ```
 
+<h3 style="color:'red'">Connecting to UI !</h3>
+
+install necessary package
+```
+pip install django-cors-headers
+```
+
+in settings.py add corsheaders, need to add middleware class to listen in on responses 
+```
+INSTALLED_APPS = [
+    'corsheaders'
+]
+
+
+MIDDLEWARE = [
+    'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
+]
+
+CORS_ORIGIN_ALLOW_ALL = True
+```
+
+
+
 
 ## Creating a project < 프로젝트 생성 >
 
