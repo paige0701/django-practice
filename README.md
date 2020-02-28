@@ -8,12 +8,32 @@ manage.py 경로에서 실행한다
 python manage.py runserver
 ```
 
-<h3 style="color:'red'">Urls</h3>
+<h3 style="color:'red'">Serialize models</h3>
 
-admin
+djangoPractice/settings.py add rest_framework
 ```
-/admin
+INSTALLED_APPS = [
+    'rest_framework'
+]
 ```
+
+polls/serializers.py Create serialize class
+```
+class QuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
+        fields = "__all__"
+```
+
+polls/views.py Serialize django models with Serializer!!
+```
+def index(request):
+    latest_question_list = Question.objects.filter().order_by('-pub_date')[:5]
+    serializer = QuestionSerializer(latest_question_list, many=True)
+    return JsonResponse(serializer.data, safe=False)
+```
+
+
 
 <h3 style="color:'red'">Connecting to UI !</h3>
 
