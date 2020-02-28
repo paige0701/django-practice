@@ -8,7 +8,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         model = Question
         fields = "__all__"
 
-class PollSerializer(serializers.ModelSerializer):
+class ChoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Choice
         fields = "__all__"
