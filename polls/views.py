@@ -1,3 +1,5 @@
+import json
+
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
@@ -28,11 +30,12 @@ def result(request, question_id):
 def vote(request, question_id):
     question = get_object_or_404(Question, pk = question_id)
     try:
-        selected_choice = question.choice_set.get(pk=request.POST['choice'])
+        body = json.loads(request.body)
+        selected_choice = question.choice_set.get(pk=body['choice'])
     except (KeyError, Choice.DoesNotExist):
         return Response(None, 404)
     else:
-        selected_choice += 1
+        selected_choice.votes += 1
         selected_choice.save()
 
-        return Response(None)
+        return HttpResponse('Success')
