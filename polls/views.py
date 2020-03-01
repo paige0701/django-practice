@@ -24,8 +24,19 @@ def detail(request, question_id):
     return JsonResponse(res, safe=False)
 
 def result(request, question_id):
-    response = "You're are looking at the results of question %s."
-    return HttpResponse(response % question_id)
+    qu = Question.objects.filter(id=question_id).first()
+    choices = Choice.objects.filter(question=qu).order_by('-votes')
+    s = ChoiceSerializer(choices, many=True)
+    result = []
+    for i in s.data:
+        result.append({'id': i['id'],
+                       'choice_text': i['choice_text'],
+                       'votes': i['votes']})
+    res = {
+        'question': qu.question_text,
+        'choices': result
+    }
+    return JsonResponse(res, safe=False,)
 
 def vote(request, question_id):
     question = get_object_or_404(Question, pk = question_id)
@@ -38,4 +49,4 @@ def vote(request, question_id):
         selected_choice.votes += 1
         selected_choice.save()
 
-        return HttpResponse('Success')
+        return HttpResponse('Success', status=200)
