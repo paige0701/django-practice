@@ -34,6 +34,7 @@ CSRF_USE_SESSIONS =True
 # Application definition
 
 INSTALLED_APPS = [
+    'languageprac.apps.LanguagepracConfig',
     'polls.apps.PollsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
