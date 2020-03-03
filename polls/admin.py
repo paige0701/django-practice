@@ -8,11 +8,23 @@ class ChoiceInLine(admin.TabularInline):
     extra =  3
 
 class QuestionAdmin(admin.ModelAdmin):
+
     fieldsets = [
         (None, {'fields': ['question_text']}),
         ('Date Information', {'fields': ['pub_date'], 'classes': ['collapse']})
     ]
+
+    # Question 아래 choice 등록 할 수 있음
     inlines = [ChoiceInLine]
+
+    # Question list 에서 보여줄 fields
     list_display = ('question_text', 'pub_date', 'was_published_recently')
+
+    # 필터 옵션
+    list_filter = ['pub_date']
+
+    # 검색바 생김
+    search_fields = ['question_text']
+
 
 admin.site.register(Question, QuestionAdmin)
