@@ -1,11 +1,7 @@
-import json
-
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
-from rest_framework.response import Response
-from rest_framework import status
 
 from polls.models import Question, Choice
 from polls.serializers import QuestionSerializer, ChoiceSerializer
@@ -14,7 +10,7 @@ from polls.serializers import QuestionSerializer, ChoiceSerializer
 @api_view(['GET'])
 def question_list(request):
     if request.method == 'GET':
-        questions = Question.objects.filter().order_by('pub_date')[:5]
+        questions = Question.objects.filter(pub_date__lte=timezone.now()).order_by('pub_date')[:5]
         serializer = QuestionSerializer(questions, many=True)
         return JsonResponse(serializer.data, safe=False)
 

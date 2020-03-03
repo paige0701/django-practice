@@ -1,9 +1,13 @@
 import datetime
+import json
 
 from django.test import TestCase
 
 # Create your tests here.
+from django.urls import reverse
 from django.utils import timezone
+from rest_framework.test import APIRequestFactory, APITestCase
+
 from polls.models import Question
 
 
@@ -35,3 +39,16 @@ class QuestionModelTests(TestCase):
         time = timezone.now() - datetime.timedelta(hours=23, minutes=59)
         question = Question(pub_date=time)
         self.assertIs(question.was_published_recently(), True)
+
+
+def create_question(question_text, days):
+    time = timezone.now() + datetime.timedelta(days=days)
+    return Question.objects.create(question_text=question_text, pub_date=time)
+
+class QuestionListViewTests(APITestCase):
+    def test_no_questions(self):
+
+        url = reverse('questions')
+        response = self.client.get(url)
+        # self.assertEqual(response.status_code, 200)
+        # self.assertContains(response, 'No polls are available')
