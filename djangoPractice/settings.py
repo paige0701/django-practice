@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'djangoPractice.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django_practice',
+        'NAME': 'djangopractice',
         'USER': 'django',
         'PASSWORD': 'django',
         'HOST':'localhost',
@@ -130,3 +130,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# default 유저 말고 직접 만든 유저를 사용할 경우 이렇게 해야함
+AUTH_USER_MODEL = 'polls.User'

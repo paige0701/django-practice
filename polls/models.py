@@ -1,10 +1,29 @@
 import datetime
 
+from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 
 # Create your models here.
 from django.utils import timezone
 
+from polls.managers import CustomUserManager
+
+
+class User(AbstractBaseUser, PermissionsMixin):
+
+    email = models.EmailField(unique=True, max_length=255)
+    full_name = models.CharField(max_length=255)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
+    is_staff = models.BooleanField(default=False)
+    is_superuser=models.BooleanField(default=False)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
+    objects = CustomUserManager()
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
