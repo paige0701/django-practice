@@ -1,7 +1,9 @@
+from django.contrib.auth import logout
 from django.http import HttpResponse, JsonResponse
 from django.utils import timezone
 from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
+from rest_framework.views import APIView
 
 from polls.models import Question, Choice
 from polls.serializers import QuestionSerializer, ChoiceSerializer
