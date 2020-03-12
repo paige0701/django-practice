@@ -1,17 +1,22 @@
 from django.http import HttpResponse, JsonResponse
 
 # Create your views here.
-from languageprac.models import Vocabulary
+from rest_framework.decorators import api_view
+
+from languageprac.models import Vocabulary, Category
 from languageprac.serializers import VocabularySerializer
 
 
+@api_view(['GET'])
 def get_words_by_category(request, id):
 
     try:
+        category = Category.objects.get(id=id)
         words = Vocabulary.objects.filter(category=id)
         serializer = VocabularySerializer(words, many=True)
         res = {
-            'category': '',
+            'id': category.id,
+            'name': category.name,
             'words': serializer.data
         }
         return JsonResponse(res, safe=False)
