@@ -1,6 +1,12 @@
+import datetime
+
 from django.db import models
 
 # Create your models here.
+from django.utils import timezone
+
+from polls.models import User
+
 
 class Category(models.Model):
     name = models.CharField(max_length=200)
@@ -15,6 +21,18 @@ class Vocabulary(models.Model):
     eng = models.CharField(max_length=200)
     esp = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published', auto_now_add=True)
+
+    def __str__(self):
+        return self.eng
+
+
+class Record(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    eng = models.CharField(max_length=300)
+    kor = models.CharField(max_length=300)
+    esp = models.CharField(max_length=300)
+    pub_date = models.DateTimeField('date published', auto_now_add=True)
+    modified_date = models.DateField(default=timezone.now)
 
     def __str__(self):
         return self.eng

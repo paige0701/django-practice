@@ -2,6 +2,8 @@ from django.http import HttpResponse, JsonResponse
 
 # Create your views here.
 from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
 
 from languageprac.models import Vocabulary, Category
 from languageprac.serializers import VocabularySerializer, CategorySerializer
@@ -23,7 +25,7 @@ def get_words_by_category(request, id):
     except Vocabulary.DoesNotExist:
         return HttpResponse(status=404)
 
-
+@api_view(['GET'])
 def get_categories(request):
     try:
         categories = Category.objects.filter()
@@ -34,4 +36,10 @@ def get_categories(request):
 
 
 
+class RecordView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+
+        pass
 

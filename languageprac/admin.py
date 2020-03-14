@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from languageprac.models import Vocabulary, Category
+from languageprac.models import Vocabulary, Category, Record
 
 
 class VocabularyInLine(admin.TabularInline):
@@ -17,3 +17,4 @@ class CategoryAdmin(admin.ModelAdmin):
 
 admin.site.register(Vocabulary)
 admin.site.register(Category, CategoryAdmin)
+admin.site.register(Record)
