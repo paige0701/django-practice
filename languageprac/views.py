@@ -1,3 +1,6 @@
+import datetime
+
+import pytz
 from django.http import HttpResponse, JsonResponse
 
 # Create your views here.
@@ -5,7 +8,7 @@ from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
-from languageprac.models import Vocabulary, Category
+from languageprac.models import Vocabulary, Category, Record
 from languageprac.serializers import VocabularySerializer, CategorySerializer
 
 
@@ -40,6 +43,6 @@ class RecordView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
-
-        pass
+        a = [i for i in Record.objects.filter(user=request.auth.user_id).dates('pub_date', 'day')]
+        return JsonResponse(a, safe=False)
 
