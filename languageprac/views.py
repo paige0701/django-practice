@@ -1,6 +1,6 @@
 import datetime
+import json
 
-import pytz
 from django.http import HttpResponse, JsonResponse
 
 # Create your views here.
@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 
 from languageprac.models import Vocabulary, Category, Record
 from languageprac.serializers import VocabularySerializer, CategorySerializer, RecordSerializer
+from polls.models import User
 
 
 @api_view(['GET'])
@@ -61,3 +62,8 @@ class RecordView(APIView):
         a = [i for i in Record.objects.filter(user=request.auth.user_id).dates('pub_date', 'day')]
         return JsonResponse(a, safe=False)
 
+    def post(self, request):
+        user = User.objects.get(id=request.auth.user_id)
+        records = json.loads(request.data.get('records'))
+        Record.objects.bulk_create([Record(eng=i['eng'], esp=i['esp'], kor=i['kor'], user=user) for i in records])
+        return HttpResponse(status=200)
