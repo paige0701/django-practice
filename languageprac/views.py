@@ -64,6 +64,7 @@ class RecordView(APIView):
 
     def post(self, request):
         user = User.objects.get(id=request.auth.user_id)
-        records = json.loads(request.data.get('records'))
+        records = json.dumps(request.data.get('records'))
+        records = json.loads(records)  # todo : whats the point of this?
         Record.objects.bulk_create([Record(eng=i['eng'], esp=i['esp'], kor=i['kor'], user=user) for i in records])
         return HttpResponse(status=200)
