@@ -1,14 +1,16 @@
 import datetime
-import json
+import uuid
 
+import pytest
 from django.test import TestCase
 
 # Create your tests here.
 from django.urls import reverse
 from django.utils import timezone
-from rest_framework.test import APIRequestFactory, APITestCase
+from rest_framework.authtoken.models import Token
+from rest_framework.test import APITestCase
 
-from polls.models import Question
+from polls.models import Question, User
 
 
 class QuestionModelTests(TestCase):
