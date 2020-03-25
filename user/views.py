@@ -1,12 +1,14 @@
 from django.contrib.auth import authenticate
 
 # Create your views here.
-from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_404_NOT_FOUND, HTTP_200_OK
+
+from polls.models import User
 
 
 @api_view(['POST'])
@@ -25,3 +27,16 @@ def login(request):
 
     token, _ = Token.objects.get_or_create(user=user)
     return Response({'token': token.key}, status=HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes((AllowAny,))
+def create(request):
+    email = request.data.get('email')
+    password = request.data.get('password')
+    fullname = request.data.get('fullname')
+
+    user = User.objects.create_user(email=email, password=password, full_name=fullname)
+    if user:
+        return HttpResponse(status=200)
+    else:
+        return HttpResponse(status=400)
