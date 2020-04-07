@@ -93,11 +93,11 @@ WSGI_APPLICATION = 'djangoPractice.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'djangopractice',
-        'USER': 'django',
-        'PASSWORD': 'django',
-        'HOST':'localhost',
-        'PORT':3306
+        'NAME': os.environ['DB_NAME'],
+        'USER': os.environ['DB_USER'],
+        'PASSWORD': os.environ['DB_PW'],
+        'HOST': os.environ['DB_HOSR'],
+        'PORT': 3306
     }
 }
 
