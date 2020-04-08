@@ -25,7 +25,7 @@ SECRET_KEY = 'ka*v!=-!2!n@^(u7wc5&=g56bgbxx@11c%jgl@7-)pf)xtr&xi'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['django-env.eba-xfvw9mxz.us-west-2.elasticbeanstalk.com', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['django-app2.eba-hneaknrq.ap-northeast-2.elasticbeanstalk.com', '127.0.0.1', 'localhost']
 
 CORS_ORIGIN_ALLOW_ALL = True
 CSRF_COOKIE_SECURE = True
