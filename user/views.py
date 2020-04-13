@@ -26,7 +26,9 @@ def login(request):
         return Response({'error': 'Invalid credentials'}, status=HTTP_404_NOT_FOUND)
 
     token, _ = Token.objects.get_or_create(user=user)
-    return Response({'token': token.key}, status=HTTP_200_OK)
+
+    return Response({'token': token.key, 'user_id': user.id, 'full_name': user.full_name}, status=HTTP_200_OK)
+
 
 @api_view(['POST'])
 @permission_classes((AllowAny,))
