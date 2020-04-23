@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
 from languageprac.models import Vocabulary, Category, Record
-from languageprac.pagination import ListPageNumberPagination
+from languageprac.pagination import DashboardPageNumberPagination, ListPageNumberPagination
 from languageprac.serializers import VocabularySerializer, CategorySerializer, RecordSerializer
 from polls.models import User
 
@@ -23,6 +23,10 @@ def get_records_by_id(request, id):
 
             category = Category.objects.get(id=id)
 
+            page_size = 20
+            if 'page_size' in request.query_params:
+                page_size = request.query_params['page_size']
+
             if 'search' in request.query_params:
                 search = request.query_params['search']
                 words = Vocabulary.objects.filter(category=id).filter(Q(eng__contains=search) |
@@ -32,7 +36,10 @@ def get_records_by_id(request, id):
                 words = Vocabulary.objects.filter(category=id)
 
             # paging
-            paginator = ListPageNumberPagination()
+            if int(page_size) == 5:
+                paginator = DashboardPageNumberPagination()
+            else:
+                paginator = ListPageNumberPagination()
 
             context = paginator.paginate_queryset(words, request)
 
