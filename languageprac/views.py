@@ -60,11 +60,30 @@ def get_records_by_id(request, id):
     else:
         try:
             y, m, d = id.split('-')
-            a = Record.objects.filter(user=request.auth.user_id, pub_date__startswith=datetime.date(int(y), int(m), int(d)))
-            serializer = RecordSerializer(a, many=True)
+
+            page_size = 20
+
+            if 'page_size' in request.query_params:
+                page_size = request.query_params['page_size']
+
+            records = Record.objects.filter(user=request.auth.user_id,
+                                            pub_date__startswith=datetime.date(int(y), int(m), int(d)))
+
+            # paging
+            if int(page_size) == 5:
+                paginator = DashboardPageNumberPagination()
+            else:
+                paginator = ListPageNumberPagination()
+
+            context = paginator.paginate_queryset(records, request)
+
+            serializer = RecordSerializer(context, many=True)
+
             res = {
                 'id': id,
                 'name': id,
+                'count': records.count(),
+                'page': paginator.page.number,
                 'words': serializer.data
             }
             return JsonResponse(res, safe=False)
@@ -75,8 +94,26 @@ def get_records_by_id(request, id):
 @api_view(['GET'])
 def get_categories(request):
     try:
-        categories = Category.objects.filter()
-        serializer = CategorySerializer(categories, many=True)
+
+        page_size = 20
+        if 'page_size' in request.query_params:
+            page_size = request.query_params['page_size']
+
+        if 'search' in request.query_params:
+            search = request.query_params['search']
+            categories = Category.objects.filter(Q(name__contains=search))
+        else:
+            categories = Category.objects.filter()
+
+        # paging
+        if int(page_size) == 5:
+            paginator = DashboardPageNumberPagination()
+        else:
+            paginator = ListPageNumberPagination()
+
+        context = paginator.paginate_queryset(categories, request)
+        serializer = CategorySerializer(context, many=True)
+
         return JsonResponse(serializer.data, safe=False)
     except Category.DoesNotExist:
         return HttpResponse(status=404)
