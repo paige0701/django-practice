@@ -1,6 +1,7 @@
 import datetime
 import json
 
+from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 
 # Create your views here.
@@ -9,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
 from languageprac.models import Vocabulary, Category, Record
+from languageprac.pagination import ListPageNumberPagination
 from languageprac.serializers import VocabularySerializer, CategorySerializer, RecordSerializer
 from polls.models import User
 
@@ -18,20 +20,39 @@ def get_records_by_id(request, id):
 
     if '-' not in id:
         try:
+
             category = Category.objects.get(id=id)
-            words = Vocabulary.objects.filter(category=id)
-            serializer = VocabularySerializer(words, many=True)
+
+            if 'search' in request.query_params:
+                search = request.query_params['search']
+                words = Vocabulary.objects.filter(category=id).filter(Q(eng__contains=search) |
+                                                                      Q(kor__contains=search) |
+                                                                      Q(esp__contains=search))
+            else:
+                words = Vocabulary.objects.filter(category=id)
+
+            # paging
+            paginator = ListPageNumberPagination()
+
+            context = paginator.paginate_queryset(words, request)
+
+            # serialize paginated list
+            serializer = VocabularySerializer(context, many=True)
+
             res = {
                 'id': category.id,
                 'name': category.name,
+                'count': words.count(),
+                'page': paginator.page.number,
                 'words': serializer.data
             }
+
             return JsonResponse(res, safe=False)
         except Vocabulary.DoesNotExist:
             return HttpResponse(status=404)
     else:
         try:
-            y,m,d = id.split('-')
+            y, m, d = id.split('-')
             a = Record.objects.filter(user=request.auth.user_id, pub_date__startswith=datetime.date(int(y), int(m), int(d)))
             serializer = RecordSerializer(a, many=True)
             res = {
@@ -52,7 +73,6 @@ def get_categories(request):
         return JsonResponse(serializer.data, safe=False)
     except Category.DoesNotExist:
         return HttpResponse(status=404)
-
 
 
 class RecordView(APIView):
