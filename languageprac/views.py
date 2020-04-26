@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
 from languageprac.models import Vocabulary, Category, Record
-from languageprac.pagination import DashboardPageNumberPagination, ListPageNumberPagination
+from languageprac.pagination import DashboardPageNumberPagination, ListPageNumberPagination, get_pagination_result
 from languageprac.serializers import VocabularySerializer, CategorySerializer, RecordSerializer
 from polls.models import User
 
@@ -112,9 +112,17 @@ def get_categories(request):
             paginator = ListPageNumberPagination()
 
         context = paginator.paginate_queryset(categories, request)
+
+        paging = get_pagination_result(paginator, categories.count())
+
         serializer = CategorySerializer(context, many=True)
 
-        return JsonResponse(serializer.data, safe=False)
+        res = {
+            'page': paging,
+            'data': serializer.data
+        }
+
+        return JsonResponse(res, safe=False)
     except Category.DoesNotExist:
         return HttpResponse(status=404)
 
