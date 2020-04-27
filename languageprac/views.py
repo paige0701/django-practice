@@ -101,9 +101,9 @@ def get_categories(request):
 
         if 'search' in request.query_params:
             search = request.query_params['search']
-            categories = Category.objects.filter(Q(name__contains=search))
+            categories = Category.objects.filter(Q(name__contains=search)).order_by('-pub_date')
         else:
-            categories = Category.objects.filter()
+            categories = Category.objects.filter().order_by('-pub_date')
 
         # paging
         if int(page_size) == 5:
