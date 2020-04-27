@@ -99,9 +99,9 @@ def get_categories(request):
         if 'page_size' in request.query_params:
             page_size = request.query_params['page_size']
 
-        if 'search' in request.query_params:
-            search = request.query_params['search']
-            categories = Category.objects.filter(Q(name__contains=search)).order_by('-pub_date')
+        if 'search_text' in request.query_params:
+            search = request.query_params['search_text']
+            categories = Category.objects.filter(Q(name__icontains=search)).order_by('-pub_date')
         else:
             categories = Category.objects.filter().order_by('-pub_date')
 
