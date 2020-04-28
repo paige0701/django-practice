@@ -16,6 +16,14 @@ from polls.models import User
 
 
 @api_view(['GET'])
+def get_word_of_the_day(request):
+    user_id = request.user.id
+    record = Record.objects.filter(user_id=user_id).order_by('?').first()
+    serializer = RecordSerializer(record)
+    return JsonResponse(serializer.data, safe=False)
+
+
+@api_view(['GET'])
 def get_records_by_id(request, id):
 
     if '-' not in id:
