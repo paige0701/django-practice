@@ -10,8 +10,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
 from languageprac.models import Vocabulary, Category, Record
-from languageprac.pagination import DashboardPageNumberPagination, ListPageNumberPagination, get_pagination_result
+from languageprac.pagination import get_pagination_result, \
+    get_pagination_class
 from languageprac.serializers import VocabularySerializer, CategorySerializer, RecordSerializer
+from languageprac.utils import get_request_params
 from polls.models import User
 
 
@@ -31,9 +33,8 @@ def get_records_by_id(request, id):
 
             category = Category.objects.get(id=id)
 
-            page_size = 20
-            if 'page_size' in request.query_params:
-                page_size = request.query_params['page_size']
+            params = get_request_params(request.query_params)
+            page_size = params['page_size']
 
             if 'search' in request.query_params:
                 search = request.query_params['search']
@@ -44,10 +45,7 @@ def get_records_by_id(request, id):
                 words = Vocabulary.objects.filter(category=id)
 
             # paging
-            if int(page_size) == 5:
-                paginator = DashboardPageNumberPagination()
-            else:
-                paginator = ListPageNumberPagination()
+            paginator = get_pagination_class(page_size)
 
             context = paginator.paginate_queryset(words, request)
 
@@ -69,19 +67,14 @@ def get_records_by_id(request, id):
         try:
             y, m, d = id.split('-')
 
-            page_size = 20
-
-            if 'page_size' in request.query_params:
-                page_size = request.query_params['page_size']
+            params = get_request_params(request.query_params)
+            page_size = params['page_size']
 
             records = Record.objects.filter(user=request.auth.user_id,
                                             pub_date__startswith=datetime.date(int(y), int(m), int(d)))
 
             # paging
-            if int(page_size) == 5:
-                paginator = DashboardPageNumberPagination()
-            else:
-                paginator = ListPageNumberPagination()
+            paginator = get_pagination_class(page_size)
 
             context = paginator.paginate_queryset(records, request)
 
@@ -113,11 +106,7 @@ def get_categories(request):
         else:
             categories = Category.objects.filter().order_by('-pub_date')
 
-        # paging
-        if int(page_size) == 5:
-            paginator = DashboardPageNumberPagination()
-        else:
-            paginator = ListPageNumberPagination()
+        paginator = get_pagination_class(page_size)
 
         context = paginator.paginate_queryset(categories, request)
 

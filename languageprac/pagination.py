@@ -17,3 +17,10 @@ def get_pagination_result(paginator, total_items):
         'current_page': current_page,
         'total_items': total_items
     }
+
+
+def get_pagination_class(size):
+    if int(size) == 5:
+        return DashboardPageNumberPagination()
+    else:
+        return ListPageNumberPagination()

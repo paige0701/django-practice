@@ -44,3 +44,8 @@ class FavouriteVocabulary(models.Model):
 
 class FavouriteRecord(models.Model):
     record = models.ForeignKey(Record, on_delete=models.CASCADE, null=True)
+
+
+class Favourite(models.Model):
+    type = models.IntegerField(null=False)
+    type_id = models.IntegerField(null=False)
