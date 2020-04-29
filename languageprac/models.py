@@ -1,5 +1,3 @@
-import datetime
-
 from django.db import models
 
 # Create your models here.
@@ -14,6 +12,7 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Vocabulary(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -37,3 +36,11 @@ class Record(models.Model):
     def __str__(self):
         return self.eng
 
+
+class FavouriteVocabulary(models.Model):
+    category_vocab = models.ForeignKey(Vocabulary, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class FavouriteRecord(models.Model):
+    record = models.ForeignKey(Record, on_delete=models.CASCADE, null=True)
