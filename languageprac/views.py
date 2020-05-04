@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
-from languageprac.models import Vocabulary, Category, Record
+from languageprac.models import Vocabulary, Category, Record, FavouriteVocabulary
 from languageprac.pagination import get_pagination_result, \
     get_pagination_class
 from languageprac.serializers import VocabularySerializer, CategorySerializer, RecordSerializer
@@ -137,3 +137,30 @@ class RecordView(APIView):
         records = json.loads(records)  # todo : whats the point of this?
         Record.objects.bulk_create([Record(eng=i['eng'], esp=i['esp'], kor=i['kor'], user=user) for i in records])
         return HttpResponse(status=200)
+
+
+class FavouriteCategoryView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        user_id = request.auth.user_id
+        vocab_id = request.data.get('vocab_id')
+
+        # delete
+        if 'id' in request.data:
+            id = request.data.get('id')
+            try:
+                # delete favourite
+                FavouriteVocabulary.objects.filter(id=id).delete()
+                return HttpResponse(status=200)
+            except IOError:
+                return HttpResponse(status=400)
+
+        else:
+
+            fav = FavouriteVocabulary.objects.create(user_id=user_id, category_vocab_id=vocab_id)
+            if fav:
+                return HttpResponse(status=200)
+            else:
+                return HttpResponse(status=400)
+
